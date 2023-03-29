@@ -35,6 +35,14 @@ public class MemberRepository {
         return member;
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public Member createMember(Member member1) {
+
+        em.persist(member1);
+
+        return member1;
+    }
+
     public int checkUserId(String userId) {
         try {
             // 쿼리문의 결과(존재하지 않음(False,0),존재함(True, 1))를 int형(0,1)으로 반환됩니다.

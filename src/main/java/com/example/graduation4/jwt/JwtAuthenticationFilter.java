@@ -1,8 +1,10 @@
 package com.example.graduation4.jwt;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -17,10 +19,13 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
     private final JwtTokenProvider jwtTokenProvider;
 
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String BEARER_TYPE = "Bearer";
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         // 헤더에서 토큰 받아오기
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+        String token = resolveToken((HttpServletRequest) request);
 
         // 토큰이 유효하다면
         if (token != null && jwtTokenProvider.validateToken(token)) {
@@ -29,8 +34,16 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             // SecurityContext 에 객체 저장
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-
         // 다음 Filter 실행
         chain.doFilter(request, response);
+    }
+
+    // Request Header 에서 토큰 정보 추출
+    private String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_TYPE)) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 }
