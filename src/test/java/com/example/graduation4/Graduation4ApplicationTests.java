@@ -1,0 +1,13 @@
+package com.example.graduation4;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class Graduation4ApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
