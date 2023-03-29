@@ -1,6 +1,7 @@
 package com.example.graduation4.member.dto;
 
 import com.example.graduation4.member.Member;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,16 @@ public class MemberResponseDto {
                 .build();
 
         return ResponseEntity.ok(body);
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    public static class TokenInfo {
+        private String grantType;
+        private String accessToken;
+        private String refreshToken;
+        private Long refreshTokenExpirationTime;
     }
 
 
