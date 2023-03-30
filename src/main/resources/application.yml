@@ -4,8 +4,8 @@ server:
 spring:
   datasource:
     # url: jdbc:mysql://localhost:3306/graduation
-    url: jdbc:mysql://mallery4.csmtzvyurww1.us-east-1.rds.amazonaws.com:3306/mallery?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: mallery
+    url: jdbc:mysql://mallery4.c1uvd651eczi.ap-northeast-2.rds.amazonaws.com/mallery?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: admin
     password: graduation2023
     # username: root
     # password: kyungmin_root
@@ -17,7 +17,7 @@ spring:
   jpa:
     database: mysql
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:
