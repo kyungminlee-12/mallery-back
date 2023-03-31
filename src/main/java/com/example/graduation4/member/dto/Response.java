@@ -1,5 +1,6 @@
 package com.example.graduation4.member.dto;
 
+import com.example.graduation4.member.Member;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -24,12 +25,40 @@ public class Response {
         private Object error;
     }
 
+    @Getter
+    @Builder
+    private static class Login {
+
+        private int state;
+        private String result;
+        private String massage;
+        private Object data;
+        private Object error;
+        private String userId;
+        private String username;
+        private String phoneNumber;
+    }
+
     public ResponseEntity<?> success(Object data, String msg, HttpStatus status) {
         Body body = Body.builder()
                 .state(status.value())
                 .data(data)
                 .result("success")
                 .massage(msg)
+                .error(Collections.emptyList())
+                .build();
+        return ResponseEntity.ok(body);
+    }
+
+    public ResponseEntity<?> success2(Member member, Object data, String msg, HttpStatus status) {
+        Login body = Login.builder()
+                .state(status.value())
+                .data(data)
+                .result("success")
+                .massage(msg)
+                .userId(member.getUserId())
+                .username(member.getUsername())
+                .phoneNumber(member.getPhoneNumber())
                 .error(Collections.emptyList())
                 .build();
         return ResponseEntity.ok(body);

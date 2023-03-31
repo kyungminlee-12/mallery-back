@@ -58,8 +58,10 @@ public class MemberService {
         // 4. RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
         redisTemplate.opsForValue()
                 .set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
-
-        return response.success(tokenInfo, "로그인에 성공했습니다.", HttpStatus.OK);
+        System.out.println(authentication.getName()+" user access token: "+tokenInfo.getAccessToken());
+        System.out.println(authentication.getName()+" user refresh token: "+tokenInfo.getRefreshToken());
+        return response.success2(memberRepository.findMemberByUserId(login.getUserId()), tokenInfo, "로그인에 성공했습니다.", HttpStatus.OK);
+        // return memberResponseDto.loginSuccess(memberRepository.findMemberByUserId(login.getUserId()));
     }
 
     public ResponseEntity<?> reissue(MemberRequestDto.Reissue reissue) {
@@ -75,10 +77,10 @@ public class MemberService {
         String refreshToken = (String)redisTemplate.opsForValue().get("RT:" + authentication.getName());
         // (추가) 로그아웃되어 Redis 에 RefreshToken 이 존재하지 않는 경우 처리
         if(ObjectUtils.isEmpty(refreshToken)) {
-            return response.fail("잘못된 요청입니다.", HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseTemplate<>(EMPTY_JWT));
         }
         if(!refreshToken.equals(reissue.getRefreshToken())) {
-            return response.fail("Refresh Token 정보가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseTemplate<>(NO_JWT));
         }
 
         // 4. 새로운 토큰 생성
@@ -93,7 +95,8 @@ public class MemberService {
     public ResponseEntity<?> logout(MemberRequestDto.Logout logout) {
         // 1. Access Token 검증
         if (!jwtTokenProvider.validateToken(logout.getAccessToken())) {
-            return response.fail("잘못된 요청입니다.", HttpStatus.BAD_REQUEST);
+            // return response.fail("잘못된 요청입니다.", HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseTemplate<>(NO_JWT));
         }
 
         // 2. Access Token 에서 User email 을 가져옵니다.
@@ -107,8 +110,7 @@ public class MemberService {
 
         // 4. 해당 Access Token 유효시간 가지고 와서 BlackList 로 저장하기
         Long expiration = jwtTokenProvider.getExpiration(logout.getAccessToken());
-        redisTemplate.opsForValue()
-                .set(logout.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(logout.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
 
         return response.success("로그아웃 되었습니다.");
     }
@@ -170,7 +172,7 @@ public class MemberService {
 
 
         // Member new_member = memberRepository.createMember(member1);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseTemplate<>(SIGNUP_SUCCESS));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseTemplate<>(SIGNUP_SUCCESS));
     }
 
 

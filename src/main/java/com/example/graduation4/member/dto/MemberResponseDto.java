@@ -33,6 +33,32 @@ public class MemberResponseDto {
         return ResponseEntity.ok(body);
     }
 
+    public ResponseEntity<?> loginSuccess(Member member) {
+
+        MemberBody body = MemberBody.builder()
+                .result("로그인 성공")
+                //.memberId(script.getMemberId().getId())
+                .userId(member.getUserId())
+                .username(member.getUsername())
+                .phone_number(member.getPhoneNumber())
+                .build();
+
+        return ResponseEntity.ok(body);
+    }
+
+    public ResponseEntity<?> logoutSuccess(Member member) {
+
+        MemberBody body = MemberBody.builder()
+                .result("로그아웃 성공")
+                //.memberId(script.getMemberId().getId())
+                .userId(member.getUserId())
+                .username(member.getUsername())
+                .phone_number(member.getPhoneNumber())
+                .build();
+
+        return ResponseEntity.ok(body);
+    }
+
     @Builder
     @Getter
     @AllArgsConstructor
