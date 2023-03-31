@@ -81,4 +81,13 @@ public class MemberController {
         return memberService.findMemberByUserId(userid);
     }
 
+    @PostMapping("/idCheck")
+    public ResponseEntity<?> doubleCheck(@RequestBody MemberRequestDto.IdCheck id, Errors errors) throws ResponseException {
+        // validation check
+        if (errors.hasErrors()) {
+            return response.invalidFields(Helper.refineErrors(errors));
+        }
+        return memberService.idCheck(id);
+    }
+
 }

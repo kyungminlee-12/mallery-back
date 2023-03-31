@@ -24,7 +24,8 @@ public enum ResponseTemplateStatus {
 
     USERID_DUPLICATED(false, "이미 존재하는 사용자 아이디입니다.", 4010),
     PASSWORD_DUPLICATED(false, "이미 존재하는 비밀번호입니다.", 4011),
-    FRIEND_DUPLICATED(false, "이미 존재하는 친구 아이디입니다.", 4012);
+    FRIEND_DUPLICATED(false, "이미 존재하는 친구 아이디입니다.", 4012),
+    SIGNUP_SUCCESS(true, "해당 아이디 사용이 가능합니다", 200);
 
     private final boolean isSuccess;
     private final String message;

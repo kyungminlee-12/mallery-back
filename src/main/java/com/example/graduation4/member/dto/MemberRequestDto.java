@@ -76,5 +76,16 @@ public class MemberRequestDto {
         private String refreshToken;
     }
 
+    @Getter
+    @Setter
+    public static class IdCheck {
+
+        @Pattern(regexp="[가-힣|a-z|A-Z|0-9]{3,30}",message="3~30길이의 알파벳, 한글, 숫자로 입력해주세요")
+        @NotBlank(message="userId을 입력해주세요.")
+        @NotNull
+        private String userId;
+
+    }
+
 
 }
