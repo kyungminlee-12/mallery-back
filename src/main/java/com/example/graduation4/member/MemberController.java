@@ -34,7 +34,8 @@ public class MemberController {
 
 
     @PostMapping("/signup")
-    @ApiOperation(value = "회원가입", response = Join.class)
+    @ApiOperation(value = "회원가입")
+    // @ApiOperation(value = "회원가입", response = Join.class)
     public ResponseEntity<?> signUp(@RequestBody MemberRequestDto.Register register_input ) throws ResponseException {
         return memberService.createMember(register_input);
     }
@@ -70,9 +71,14 @@ public class MemberController {
     }
 
     @GetMapping("/authority")
-    public ResponseEntity<?> authority() {
+    public ResponseEntity<?> authority(@RequestBody MemberRequestDto.Login login) throws ResponseException {
         log.info("ADD ROLE_ADMIN");
-        return memberService.authority();
+        return memberService.authority(login.getUserId());
+    }
+
+    @GetMapping("/{userid}")
+    public ResponseEntity<?>  findUserInfo( @PathVariable("userid") String userid ) {
+        return memberService.findMemberByUserId(userid);
     }
 
 }

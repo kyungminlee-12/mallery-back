@@ -85,8 +85,7 @@ public class MemberService {
         MemberResponseDto.TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
 
         // 5. RefreshToken Redis 업데이트
-        redisTemplate.opsForValue()
-                .set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
 
         return response.success(tokenInfo, "Token 정보가 갱신되었습니다.", HttpStatus.OK);
     }
@@ -114,11 +113,16 @@ public class MemberService {
         return response.success("로그아웃 되었습니다.");
     }
 
-    public ResponseEntity<?> authority() {
+    public ResponseEntity<?> authority(String userid) throws ResponseException {
         // SecurityContext에 담겨 있는 authentication userEamil 정보
-        String userId = SecurityUtil.getCurrentUserEmail();
+        // String userId = SecurityUtil.getCurrentUserEmail();
 
-        Member user = memberRepository.findMemberByUserId(userId);
+        if (checkUserId(userid)!= 1) {
+            return response.fail("해당하는 유저가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        Member user = memberRepository.findMemberByUserId(userid);
+        System.out.println("admin role added user name: "+user.getUsername());
 
         // add ROLE_ADMIN
         user.getRoles().add(Authority.ROLE_ADMIN.name());
@@ -133,7 +137,7 @@ public class MemberService {
         System.out.println("service input user id: "+member1.getUserId());
 
         // 중복 확인: 해당 사용자 아이디를 가진 유저가 있는지 확인합니다. 중복될 경우, 에러 메시지를 보냅니다.
-        if (checkUserId(member1.getUserId())== 1) {
+        if (checkUserId(member1.getUserId()) == 1) {
             System.out.println("check user id - no user id");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseTemplate<>(USERID_DUPLICATED));
             //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("동일한 아이디를 사용하는 사용자가 있습니다. 아이디를 변경해주세요");
