@@ -156,6 +156,23 @@ public class MemberService {
         return memberResponseDto.memberSuccess(new_member);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<?> idCheck(MemberRequestDto.IdCheck id) throws ResponseException {
+        System.out.println("service input user id: "+id.getUserId());
+
+        // 중복 확인: 해당 사용자 아이디를 가진 유저가 있는지 확인합니다. 중복될 경우, 에러 메시지를 보냅니다.
+        if (checkUserId(id.getUserId()) == 1) {
+            System.out.println("check user id - no user id");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseTemplate<>(USERID_DUPLICATED));
+            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("동일한 아이디를 사용하는 사용자가 있습니다. 아이디를 변경해주세요");
+        }
+        System.out.println("check user id - yes user id");
+
+
+        // Member new_member = memberRepository.createMember(member1);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseTemplate<>(SIGNUP_SUCCESS));
+    }
+
 
     // 해당 userId이 이미 Member Table에 존재하는지 확인
     public int checkUserId(String userId) throws ResponseException {
