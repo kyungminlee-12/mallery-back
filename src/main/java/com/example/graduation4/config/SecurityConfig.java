@@ -3,6 +3,7 @@ package com.example.graduation4.config;
 import com.example.graduation4.jwt.JwtAuthenticationFilter;
 import com.example.graduation4.jwt.JwtTokenProvider;
 import com.example.graduation4.member.Authority;
+import com.example.graduation4.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.Collections;
 
 @RequiredArgsConstructor
 @EnableWebSecurity  //Spring Security 설정 활성화
@@ -67,9 +70,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //URL 관리
                 .authorizeRequests()
                 .antMatchers("/member/login", "/swagger-ui/**", "/member/signup").permitAll()
+                .antMatchers("/member/logout", "/member/{userId}").hasRole("USER")
+                // .antMatchers("/member/admin", "/member/{userId}").hasRole("ROLE_ADMIN")
                 .anyRequest().authenticated()
-                .and()
+                //.invalidateHttpSession(true);
 
+                .and()
                 // JwtAuthenticationFilter를 먼저 적용
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .httpBasic();
@@ -90,22 +96,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
 
 
-
-
 /*
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
                 .withUser(
-                        User.withDefaultPasswordEncoder()
-                                .username("mallery4")
-                                .password("graduation")
-                                .roles("ROLE_ADMIN")
+                        Member.builder()
+                                .username("admin")
+                                .password("123456")
+                                .roles(Collections.singletonList("ROLE_ADMIN"))
                                 .build()
                 );
     }
 
  */
+
 
     /*
     @Override
@@ -119,4 +124,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
      */
+
+
 }
