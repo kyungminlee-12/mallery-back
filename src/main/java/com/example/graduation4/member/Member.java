@@ -2,6 +2,7 @@ package com.example.graduation4.member;
 
 
 import com.example.graduation4.BaseEntity;
+import com.example.graduation4.group.Room;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,12 +21,12 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(name = "Member")
+@Table(name = "member")
 public class Member extends BaseEntity implements UserDetails {
 
     @Id                                                  // Primary Key
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // 프로젝트에서 연결된 DB의 넘버링 전략을 따라간다.
-    @Column(name="memberId")
+    @Column(name="member_id")
     private Long memberId;
 
     @Column(nullable = false, unique = true)
@@ -51,6 +52,9 @@ public class Member extends BaseEntity implements UserDetails {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
+
+    @OneToMany(mappedBy = "member")
+    private List<Room> rooms = new ArrayList<>();
 
     @Override
     public String getUsername() {
