@@ -87,5 +87,21 @@ public class MemberRequestDto {
 
     }
 
+    // Update
+    @Getter
+    @Setter
+    public static class Update {
+
+        @Pattern(regexp="[가-힣|a-z|A-Z|0-9]{3,30}",message="3~30길이의 알파벳, 한글, 숫자로 입력해주세요")
+        @NotBlank(message="userId을 입력해주세요.")
+        @NotNull
+        private String userId;
+
+        @Pattern(regexp = "[0-9]{6,11}",message="- 없이 숫자만 입력해주세요")
+        private String phoneNumber;
+
+
+    }
+
 
 }
