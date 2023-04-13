@@ -36,7 +36,16 @@ public class MemberRepository {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Member createMember(Member member1) {
+    public Member update(MemberRequestDto.Update member1) {
+
+        Member cur_member = em.find(Member.class, findMemberIdByUserId(member1.getUserId()));
+        cur_member.setPhoneNumber(member1.getPhoneNumber());
+
+        return cur_member;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Member createMember2(Member member1) {
         em.persist(member1);
         return member1;
     }
