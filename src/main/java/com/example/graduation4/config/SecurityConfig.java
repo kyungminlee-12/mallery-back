@@ -69,8 +69,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 //URL 관리
                 .authorizeRequests()
+                .antMatchers("/member/login", "/swagger-ui/**", "/member/signup", "/member/idCheck", "/member/reissue").permitAll()
                 .anyRequest().authenticated()
-                .antMatchers("/member/login", "/swagger-ui/**", "/member/signup", "member/idCheck", "member/reissue").permitAll()
+
                 // .antMatchers("/member/logout", "/member/{userId}").hasRole("USER")
                 // .antMatchers("/member/admin", "/member/{userId}").hasRole("ROLE_ADMIN")
                 //.invalidateHttpSession(true);
@@ -80,8 +81,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .httpBasic();
 
-        http.formLogin()
-                .loginPage("/member/login");
+        // http.formLogin()
+        //         .loginPage("/member/login");
     }
 
     /*
