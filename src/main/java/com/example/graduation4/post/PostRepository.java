@@ -4,13 +4,19 @@ import com.example.graduation4.group.Album;
 import com.example.graduation4.group.Room;
 import com.example.graduation4.group.dto.AlbumRequestDto;
 import com.example.graduation4.member.Member;
+import com.example.graduation4.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @RequiredArgsConstructor
 public class PostRepository {
+
+    @Autowired
+    private final MemberRepository memberRepository;
+    /*
 
     @Transactional(rollbackFor = Exception.class)
     public Album createPost(AlbumRequestDto.Register album1) {
@@ -34,5 +40,7 @@ public class PostRepository {
 
         return album;
     }
+
+     */
 
 }
