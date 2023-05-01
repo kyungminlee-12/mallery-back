@@ -27,9 +27,18 @@ public class AlbumResponseDto {
     private static class AlbumBody {
         private int state;
         private String result;
+        private Long albumId;
         private String albumName;
         private int memberCnt;
         private List<MemberRes> members;
+    }
+
+    @Getter
+    @Builder
+    private static class AlbumDelete {
+        private int state;
+        private String result;
+        private Long albumId;
     }
 
     public ResponseEntity<?> albumSuccess(Album album1) {
@@ -38,7 +47,8 @@ public class AlbumResponseDto {
 
         AlbumBody body = AlbumBody.builder()
                 .state(200)
-                .result("앨범 생성 성공")
+                .result("성공: 앨범 정보")
+                .albumId(album1.getAlbumId())
                 .albumName(album1.getAlbumName())
                 .memberCnt(album1.getMemberCnt())
                 .members(members_list)
@@ -54,10 +64,22 @@ public class AlbumResponseDto {
 
         AlbumBody body = AlbumBody.builder()
                 .state(200)
-                .result("친구 호출 성공")
+                .result("앨범 정보 호출 성공")
+                .albumId(album1.getAlbumId())
                 .albumName(album1.getAlbumName())
                 .memberCnt(album1.getMemberCnt())
                 .members(members_list)
+                .build();
+
+        return ResponseEntity.ok(body);
+    }
+
+    public ResponseEntity<?> albumDelete(String message, Long albumId) {
+
+        AlbumDelete body = AlbumDelete.builder()
+                .state(200)
+                .result(message)
+                .albumId(albumId)
                 .build();
 
         return ResponseEntity.ok(body);

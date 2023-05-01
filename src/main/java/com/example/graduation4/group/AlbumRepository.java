@@ -7,10 +7,13 @@ import com.example.graduation4.member.dto.MemberRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.swing.plaf.synth.SynthEditorPaneUI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +23,8 @@ public class AlbumRepository {
 
     @Autowired
     private final EntityManager em;
+    // EntityTransaction transaction = em.getTransaction();
+
     @Autowired
     private final JdbcTemplate jdbcTemplate ;
     @Autowired
@@ -69,6 +74,7 @@ public class AlbumRepository {
 
     @Transactional(rollbackFor = Exception.class)
     public int addMember(AlbumRequestDto.AddMember album1) {
+        // transaction.begin();
 
         Member init_member = memberRepository.findMemberByUserId(album1.getUserId());
         Album cur_album=em.find(Album.class, album1.getAlbumId());
@@ -88,6 +94,7 @@ public class AlbumRepository {
 
         cur_album.setMemberCnt(cur_album.getMemberCnt()+1);
         em.persist(cur_album);
+        // transaction.commit();
 
         return 0;
     }
@@ -102,8 +109,72 @@ public class AlbumRepository {
         }
     }
 
+    public int checkUserInAlbum(Long albumId, String userId) {
+        try {
+            // 쿼리문의 결과(존재하지 않음(False,0),존재함(True, 1))를 int형(0,1)으로 반환됩니다.
+            String checkQuery = "select exists(select * from mallery.album where album_id = ?)";
+            return this.jdbcTemplate.queryForObject(checkQuery, Integer.class, albumId);
+        } catch (Exception e){
+            return 0;
+        }
+    }
+
     public Album findAlbumById(Long albumId) {
         return em.find(Album.class, albumId);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public Album update(Long albumId, AlbumRequestDto.Update update) {
+
+        // transaction.begin();
+        Album cur_album = em.find(Album.class, albumId);
+        cur_album.setAlbumName(update.getAlbumName());
+        em.persist(cur_album);
+        // transaction.commit();
+
+        return cur_album;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public String deleteAlbumUser(Long albumId, AlbumRequestDto.Delete userId) {
+        try {
+            // 쿼리문의 결과(존재하지 않음(False,0),존재함(True, 1))를 int형(0,1)으로 반환됩니다.
+            Member find_member=memberRepository.findMemberByUserId(userId.getUserId());
+            Long member_id = find_member.getMemberId();
+            System.out.println("delete album user member id: "+member_id);
+
+            String findRoomQuery = "SELECT count(*) FROM mallery.rooms where album_id = ? and member_id = ?";
+            int member_exits = this.jdbcTemplate.queryForObject(findRoomQuery, Integer.class , albumId, member_id);
+            System.out.println("member exits: "+member_exits);
+
+            // 해당 album에 user 없음
+            if (member_exits != 1) {
+
+                return "album에 아이디가 "+userId.getUserId()+"인 사용자가 없습니다.";
+            }
+            else {
+                String sql = "delete FROM mallery.rooms where  album_id = "+albumId+" and member_id = "+member_id;
+                int result=this.jdbcTemplate.update(sql);
+                System.out.println(result+" row delete success");
+            }
+
+            String countMemberQuery = "select count(*) from mallery.rooms where album_id = ?";
+            int count_member = this.jdbcTemplate.queryForObject(countMemberQuery, Integer.class, albumId);
+
+            if (count_member==0) {
+                Album to_delete_album = em.find(Album.class, albumId);
+                em.remove(em.contains(to_delete_album) ? to_delete_album : em.merge(to_delete_album));
+                // album에 남은 사용자가 없어서 사용자 모두 삭제
+                return "album에서 "+userId.getUserId()+" 사용자가 성공적으로 삭제되었습니다 (album에 남은 사용자가 없어서 album도 삭제되었습니다.).";
+            }
+            // 사용자만 삭제. (아직 album에 사용자 남아 있음)
+            return "album에서 "+userId.getUserId()+" 사용자가 성공적으로 삭제되었습니다.";
+
+
+        } catch (Exception e){
+            System.out.println("error : "+e);
+            return "album에 아이디가 "+userId.getUserId()+"인 사용자가 없습니다.";
+        }
+        
+    }
 }

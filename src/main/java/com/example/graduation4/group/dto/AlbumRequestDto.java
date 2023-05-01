@@ -33,4 +33,21 @@ public class AlbumRequestDto {
         private Long albumId;
     }
 
+    @Getter
+    @Setter
+    public static class Update {
+
+        @Pattern(regexp="[가-힣|a-z|A-Z|0-9]{1,30}",message="1~30길이의 알파벳, 한글, 숫자로 입력해주세요")
+        @NotBlank(message="변경할 그룹 이름을 입력해주세요.")
+        @NotNull
+        private String albumName;
+    }
+
+    @Getter
+    @Setter
+    public static class Delete {
+        private String userId;
+    }
+
+
 }

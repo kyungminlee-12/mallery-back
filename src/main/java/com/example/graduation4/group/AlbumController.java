@@ -27,6 +27,26 @@ public class AlbumController {
         return albumService.createAlbum(new_group);
     }
 
+    @PutMapping("/{albumId}")
+    @ApiOperation(value = "앨범 정보 수정")
+    public ResponseEntity<?> updateAlbum(@PathVariable("albumId") Long albumId, @RequestBody AlbumRequestDto.Update new_name ) throws ResponseException {
+        return albumService.updateAlbum(albumId, new_name);
+    }
+
+    @GetMapping("/{albumId}")
+    @ApiOperation(value = "앨범 정보 받기")
+    // @ApiOperation(value = "회원가입", response = Join.class)
+    public ResponseEntity<?> findAlbum(@PathVariable("albumId") Long albumId ) throws ResponseException {
+        return albumService.findAlbumsByAlbumId(albumId);
+    }
+
+    @DeleteMapping("/{albumId}")
+    @ApiOperation(value = "앨범 나가기")
+    // @ApiOperation(value = "회원가입", response = Join.class)
+    public ResponseEntity<?> deleteAlbum(@PathVariable("albumId") Long albumId, @RequestBody AlbumRequestDto.Delete userId ) throws ResponseException {
+        return albumService.deleteAlbumUser(albumId, userId);
+    }
+
     @PutMapping("/member/add")
     @ApiOperation(value = "사용자 추가 생성")
     // @ApiOperation(value = "회원가입", response = Join.class)
@@ -34,12 +54,6 @@ public class AlbumController {
         return albumService.addMember(update_album);
     }
 
-    @GetMapping("/members")
-    @ApiOperation(value = "사용자 추가 생성")
-    // @ApiOperation(value = "회원가입", response = Join.class)
-    public ResponseEntity<?> findFriends(@RequestBody AlbumRequestDto.FindFriends friends_list ) throws ResponseException {
-        return albumService.findFriends(friends_list);
-    }
 
 
 }
