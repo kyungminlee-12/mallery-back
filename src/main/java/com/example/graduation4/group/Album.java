@@ -1,6 +1,7 @@
 package com.example.graduation4.group;
 
 import com.example.graduation4.BaseEntity;
+import com.example.graduation4.post.Post;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,5 +30,8 @@ public class Album extends BaseEntity {
 
     @OneToMany(mappedBy = "album")
     private List<Room> rooms = new ArrayList<>();
+
+    @OneToMany(mappedBy = "album")
+    private List<Post> posts = new ArrayList<>();
 
 }
