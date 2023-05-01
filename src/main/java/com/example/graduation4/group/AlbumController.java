@@ -27,9 +27,8 @@ public class AlbumController {
         return albumService.createAlbum(new_group);
     }
 
-    @PutMapping("/{albumId}}")
+    @PutMapping("/{albumId}")
     @ApiOperation(value = "앨범 정보 수정")
-    // @ApiOperation(value = "회원가입", response = Join.class)
     public ResponseEntity<?> updateAlbum(@PathVariable("albumId") Long albumId, @RequestBody AlbumRequestDto.Update new_name ) throws ResponseException {
         return albumService.updateAlbum(albumId, new_name);
     }

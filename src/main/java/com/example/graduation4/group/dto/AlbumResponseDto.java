@@ -47,7 +47,7 @@ public class AlbumResponseDto {
 
         AlbumBody body = AlbumBody.builder()
                 .state(200)
-                .result("앨범 생성 성공")
+                .result("성공: 앨범 정보")
                 .albumId(album1.getAlbumId())
                 .albumName(album1.getAlbumName())
                 .memberCnt(album1.getMemberCnt())

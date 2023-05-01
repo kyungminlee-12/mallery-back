@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.swing.plaf.synth.SynthEditorPaneUI;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ public class AlbumRepository {
 
     @Autowired
     private final EntityManager em;
+    // EntityTransaction transaction = em.getTransaction();
+
     @Autowired
     private final JdbcTemplate jdbcTemplate ;
     @Autowired
@@ -71,6 +74,7 @@ public class AlbumRepository {
 
     @Transactional(rollbackFor = Exception.class)
     public int addMember(AlbumRequestDto.AddMember album1) {
+        // transaction.begin();
 
         Member init_member = memberRepository.findMemberByUserId(album1.getUserId());
         Album cur_album=em.find(Album.class, album1.getAlbumId());
@@ -90,6 +94,7 @@ public class AlbumRepository {
 
         cur_album.setMemberCnt(cur_album.getMemberCnt()+1);
         em.persist(cur_album);
+        // transaction.commit();
 
         return 0;
     }
@@ -121,8 +126,11 @@ public class AlbumRepository {
     @Transactional(rollbackFor = Exception.class)
     public Album update(Long albumId, AlbumRequestDto.Update update) {
 
-        Album cur_album = em.find(Album.class, update);
+        // transaction.begin();
+        Album cur_album = em.find(Album.class, albumId);
         cur_album.setAlbumName(update.getAlbumName());
+        em.persist(cur_album);
+        // transaction.commit();
 
         return cur_album;
     }
