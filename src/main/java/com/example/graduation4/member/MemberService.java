@@ -56,8 +56,7 @@ public class MemberService {
         MemberResponseDto.TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
 
         // 4. RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
-        redisTemplate.opsForValue()
-                .set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
         System.out.println(authentication.getName()+" user access token: "+tokenInfo.getAccessToken());
         System.out.println(authentication.getName()+" user refresh token: "+tokenInfo.getRefreshToken());
         return response.success2(memberRepository.findMemberByUserId(login.getUserId()), tokenInfo, "로그인에 성공했습니다.", HttpStatus.OK);
