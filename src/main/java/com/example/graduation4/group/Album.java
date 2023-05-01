@@ -31,7 +31,8 @@ public class Album extends BaseEntity {
     @OneToMany(mappedBy = "album")
     private List<Room> rooms = new ArrayList<>();
 
-    @OneToMany(mappedBy = "album")
+    @OneToMany
+    @JoinColumn(name = "album_id")
     private List<Post> posts = new ArrayList<>();
 
 }

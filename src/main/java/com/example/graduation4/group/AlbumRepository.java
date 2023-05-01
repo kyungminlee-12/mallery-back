@@ -23,7 +23,6 @@ public class AlbumRepository {
 
     @Autowired
     private final EntityManager em;
-    // EntityTransaction transaction = em.getTransaction();
 
     @Autowired
     private final JdbcTemplate jdbcTemplate ;
