@@ -100,6 +100,8 @@ public class MemberRequestDto {
         @Pattern(regexp = "[0-9]{6,11}",message="- 없이 숫자만 입력해주세요")
         private String phoneNumber;
 
+        private String username;
+
 
     }
 

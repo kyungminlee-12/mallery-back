@@ -40,6 +40,7 @@ public class MemberRepository {
 
         Member cur_member = em.find(Member.class, findMemberIdByUserId(member1.getUserId()));
         cur_member.setPhoneNumber(member1.getPhoneNumber());
+        cur_member.setUsername(member1.getUsername());
 
         return cur_member;
     }
