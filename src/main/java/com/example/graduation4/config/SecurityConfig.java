@@ -69,16 +69,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 //URL 관리
                 .authorizeRequests()
-                .antMatchers("/member/login", "/swagger-ui/**", "/member/signup").permitAll()
-                .antMatchers("/member/logout", "/member/{userId}").hasRole("USER")
-                // .antMatchers("/member/admin", "/member/{userId}").hasRole("ROLE_ADMIN")
+                .antMatchers("/member/login", "/swagger-ui/**", "/member/signup", "/member/idCheck", "/member/reissue").permitAll()
                 .anyRequest().authenticated()
+
+                // .antMatchers("/member/logout", "/member/{userId}").hasRole("USER")
+                // .antMatchers("/member/admin", "/member/{userId}").hasRole("ROLE_ADMIN")
                 //.invalidateHttpSession(true);
 
                 .and()
                 // JwtAuthenticationFilter를 먼저 적용
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .httpBasic();
+
+        // http.formLogin()
+        //         .loginPage("/member/login");
     }
 
     /*

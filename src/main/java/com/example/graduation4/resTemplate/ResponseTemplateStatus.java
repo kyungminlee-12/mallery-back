@@ -27,8 +27,10 @@ public enum ResponseTemplateStatus {
     FRIEND_DUPLICATED(false, "이미 존재하는 친구 아이디입니다.", 4012),
     SIGNUP_SUCCESS(true, "해당 아이디 사용이 가능합니다", 200),
 
-    ALBUM_NOT_FOUND(false, "앨범을 찾을 수 없습니다.", 200)
-    ;
+    ALBUM_NOT_FOUND(false, "앨범을 찾을 수 없습니다.", 200),
+
+    UPDATE_USER_SUCCESS(true, "전화번호 수정 성공했습니다.", 200);
+
 
     private final boolean isSuccess;
     private final String message;

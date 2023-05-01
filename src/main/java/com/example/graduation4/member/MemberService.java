@@ -127,7 +127,7 @@ public class MemberService {
 
         // add ROLE_ADMIN
         user.getRoles().add(Authority.ROLE_ADMIN.name());
-        memberRepository.createMember(user);
+        memberRepository.createMember2(user);
 
         return response.success();
     }
@@ -172,6 +172,20 @@ public class MemberService {
 
         // Member new_member = memberRepository.createMember(member1);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseTemplate<>(SIGNUP_SUCCESS));
+    }
+
+    //update
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<?> update(MemberRequestDto.Update update) throws ResponseException {
+
+        // 중복 확인: 해당 사용자 아이디를 가진 유저가 있는지 확인합니다. 중복될 경우, 에러 메시지를 보냅니다.
+        if (checkUserId(update.getUserId())!= 1) {
+            return response.fail("해당하는 유저가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        memberRepository.update(update);
+        // Member new_member = memberRepository.createMember(member1);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseTemplate<>(UPDATE_USER_SUCCESS));
     }
 
 

@@ -90,4 +90,13 @@ public class MemberController {
         return memberService.idCheck(id);
     }
 
+    @PutMapping("/{userid}")
+    public ResponseEntity<?> updateMember( @PathVariable("userid") String userid, @RequestBody MemberRequestDto.Update update, Errors errors) throws ResponseException {
+        // validation check
+        if (errors.hasErrors()) {
+            return response.invalidFields(Helper.refineErrors(errors));
+        }
+        return memberService.update(update);
+    }
+
 }
