@@ -3,6 +3,7 @@ package com.example.graduation4.member;
 
 import com.example.graduation4.BaseEntity;
 import com.example.graduation4.group.Room;
+import com.example.graduation4.post.Participant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -55,6 +56,9 @@ public class Member extends BaseEntity implements UserDetails {
 
     @OneToMany(mappedBy = "member")
     private List<Room> rooms = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Participant> participants = new ArrayList<>();
 
     @Override
     public String getUsername() {

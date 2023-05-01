@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+// Member와 Post 다:다 양방향 mapping
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

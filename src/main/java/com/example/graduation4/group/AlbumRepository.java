@@ -19,7 +19,7 @@ import java.util.List;
 public class AlbumRepository {
 
     @Autowired
-    private final EntityManager em;
+     EntityManager em;
     @Autowired
     private final JdbcTemplate jdbcTemplate ;
     @Autowired
