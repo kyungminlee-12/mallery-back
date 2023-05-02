@@ -41,6 +41,16 @@ public class AlbumResponseDto {
         private Long albumId;
     }
 
+    @Getter
+    @Builder
+    private static class AllAlbumsBody {
+        private int state;
+        private String result;
+        private String userId;
+        private int albumCnt;
+        private List<AlbumRes> albums;
+    }
+
     public ResponseEntity<?> albumSuccess(Album album1) {
 
         List<MemberRes> members_list = albumRepository.findAllMembersByAlbumId(album1.getAlbumId());
@@ -80,6 +90,19 @@ public class AlbumResponseDto {
                 .state(200)
                 .result(message)
                 .albumId(albumId)
+                .build();
+
+        return ResponseEntity.ok(body);
+    }
+
+    public ResponseEntity<?> getAlbums(String userId, List<AlbumRes> res_list) {
+
+        AllAlbumsBody body = AllAlbumsBody.builder()
+                .state(200)
+                .result("특정 사용자의 앨범 전체 정보 호출 성공")
+                .userId(userId)
+                .albumCnt(res_list.size())
+                .albums(res_list)
                 .build();
 
         return ResponseEntity.ok(body);

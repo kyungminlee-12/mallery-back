@@ -20,11 +20,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostRepository {
 
-
     @Autowired
     private final MemberRepository memberRepository;
     @Autowired
     private final EntityManager em;
+
 
     @Transactional(rollbackFor = Exception.class)
     public Post createPost(PostRequestDto.Register post1) {
@@ -74,5 +74,7 @@ public class PostRepository {
 
         return results;
     }
+
+     */
 
 }

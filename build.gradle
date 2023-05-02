@@ -47,6 +47,9 @@ dependencies {
 	// JAX-B dependencies for JDK 9+
 	implementation "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2"
 	implementation "org.glassfish.jaxb:jaxb-runtime:2.3.2"
+
+	// 이미지 다루기
+	// implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.1'
 }
 
 tasks.named('test') {
