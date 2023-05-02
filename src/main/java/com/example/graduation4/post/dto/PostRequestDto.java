@@ -1,11 +1,7 @@
-package com.example.graduation4.post;
+package com.example.graduation4.post.dto;
 
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import java.util.List;
 
 public class PostRequestDto {
@@ -20,5 +16,4 @@ public class PostRequestDto {
         private String postDate;
         private List<String> participants;
     }
-
 }

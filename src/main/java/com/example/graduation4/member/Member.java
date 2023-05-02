@@ -60,7 +60,6 @@ public class Member extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "member")
     private List<Participant> participants = new ArrayList<>();
 
-
     @Override
     public String getUsername() {
         return username;

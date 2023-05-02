@@ -33,7 +33,7 @@ public class Response {
         private String result;
         private String massage;
         private Object data;
-        private Object error;
+        //private Object error;
         private String userId;
         private String username;
         private String phoneNumber;
@@ -45,7 +45,7 @@ public class Response {
                 .data(data)
                 .result("success")
                 .massage(msg)
-                .error(Collections.emptyList())
+                // .error(Collections.emptyList())
                 .build();
         return ResponseEntity.ok(body);
     }
@@ -59,7 +59,7 @@ public class Response {
                 .userId(member.getUserId())
                 .username(member.getUsername())
                 .phoneNumber(member.getPhoneNumber())
-                .error(Collections.emptyList())
+                // .error(Collections.emptyList())
                 .build();
         return ResponseEntity.ok(body);
     }
@@ -126,7 +126,7 @@ public class Response {
                 .data(data)
                 .result("fail")
                 .massage(msg)
-                .error(Collections.emptyList())
+                // .error(Collections.emptyList())
                 .build();
         return ResponseEntity.ok(body);
     }
@@ -157,7 +157,7 @@ public class Response {
                 .data(Collections.emptyList())
                 .result("fail")
                 .massage("")
-                .error(errors)
+                // .error(errors)
                 .build();
         return ResponseEntity.ok(body);
     }

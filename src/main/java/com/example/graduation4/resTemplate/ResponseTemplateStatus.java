@@ -29,7 +29,7 @@ public enum ResponseTemplateStatus {
 
     ALBUM_NOT_FOUND(false, "앨범을 찾을 수 없습니다.", 200),
 
-    UPDATE_USER_SUCCESS(true, "전화번호 수정 성공했습니다.", 200);
+    UPDATE_USER_SUCCESS(true, "사용자 정보 수정 성공했습니다.", 200);
 
 
     private final boolean isSuccess;
