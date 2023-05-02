@@ -33,16 +33,16 @@ public class Post extends BaseEntity  {
     @Column
     private String postDate;
 
-    // 이미지 경로
-    // @NotEmpty
-    // private String storedFilePath;
-
     @ManyToOne
     @JoinColumn(name = "album_id")
     private Album album;
 
     @OneToMany(mappedBy = "post")
     private List<Participant> participants = new ArrayList<>();
+
+    // 이미지 경로
+    @Column
+    private List<String> imagePaths = new ArrayList<>();
 
 
     // @Column

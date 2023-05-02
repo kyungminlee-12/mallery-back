@@ -31,6 +31,7 @@ public class PostResponseDto {
         private String postLocation;
         private int memberCnt;
         private List<MemberRes> members;
+        private List<String> imagePaths;
     }
 
     public ResponseEntity<?> postSuccess(Post post1) {
@@ -43,6 +44,7 @@ public class PostResponseDto {
                 .postDate(post1.getPostDate())
                 .postLocation(post1.getPostLocation())
                 .memberCnt(members_list.size())
+                .imagePaths(post1.getImagePaths())
                 .members(members_list)
                 .build();
 

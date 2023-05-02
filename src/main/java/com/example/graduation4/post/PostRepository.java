@@ -35,6 +35,7 @@ public class PostRepository {
         new_post.setPostDate(post1.getPostDate());
         new_post.setPostLocation(post1.getPostLocation());
         new_post.setAlbum(cur_album);
+        new_post.setImagePaths(post1.getImagePaths());
 
         List<String> participants_ids = post1.getParticipants();
         List<Participant> participants_list = new ArrayList<>();
