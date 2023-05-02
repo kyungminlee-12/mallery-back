@@ -1,6 +1,7 @@
 package com.example.graduation4.group;
 
 import com.example.graduation4.group.dto.AlbumRequestDto;
+import com.example.graduation4.group.dto.AlbumRes;
 import com.example.graduation4.group.dto.AlbumResponseDto;
 import com.example.graduation4.member.Member;
 import com.example.graduation4.member.MemberService;
@@ -14,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.example.graduation4.resTemplate.ResponseTemplateStatus.*;
 
@@ -122,6 +125,12 @@ public class AlbumService {
         String updated_album = albumRepository.deleteAlbumUser(albumId, userId);
         // Member new_member = memberRepository.createMember(member1);
         return albumResponseDto.albumDelete(updated_album, albumId);
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> getAlbums(String userId){
+        List<AlbumRes> res_list = albumRepository.getAlbums(userId);
+        return albumResponseDto.getAlbums(userId, res_list);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.graduation4.group;
 
 import com.example.graduation4.group.dto.AlbumRequestDto;
+import com.example.graduation4.group.dto.AlbumRes;
 import com.example.graduation4.member.Member;
 import com.example.graduation4.member.MemberRepository;
 import com.example.graduation4.member.dto.MemberRes;
@@ -177,4 +178,33 @@ public class AlbumRepository {
         }
         
     }
+
+    // 사용자 친구들 정보 불러오기
+    @Transactional(readOnly = true)
+    public List<AlbumRes> getAlbums(String userId) {
+        Member cur_member=memberRepository.findMemberByUserId(userId);
+
+        List<Room> rooms_list = cur_member.getRooms();
+        List<AlbumRes> results = new ArrayList<AlbumRes>();
+
+        for (Room rooms : rooms_list) {
+            AlbumRes cur_album = new AlbumRes();
+            cur_album.setAlbumId(rooms.getAlbum().getAlbumId());
+            cur_album.setAlbumName(rooms.getAlbum().getAlbumName());
+            cur_album.setMemberCnt(rooms.getAlbum().getMemberCnt());
+
+            List<String> members_list = new ArrayList<>();
+            List<MemberRes> members_entity = findAllMembersByAlbumId(rooms.getAlbum().getAlbumId());
+
+            for (MemberRes member: members_entity) {
+                members_list.add(member.getUserId());
+            }
+            cur_album.setMembers(members_list);
+            results.add(cur_album);
+        }
+
+        return results;
+    }
+
+
 }

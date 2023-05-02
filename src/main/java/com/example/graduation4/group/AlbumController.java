@@ -54,6 +54,13 @@ public class AlbumController {
         return albumService.addMember(update_album);
     }
 
+    @GetMapping("/member/{userId}")
+    @ApiOperation(value = "특정 사용자의 group (album) 모두 불러오기")
+    // @ApiOperation(value = "회원가입", response = Join.class)
+    public ResponseEntity<?> getAlbums(@PathVariable("userId") String userId ) throws ResponseException {
+        return albumService.getAlbums(userId);
+    }
+
 
 
 }
