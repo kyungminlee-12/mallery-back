@@ -2,14 +2,20 @@ package com.example.graduation4.member.dto;
 
 import com.sun.istack.NotNull;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
+@RequiredArgsConstructor
 public class MemberRequestDto {
+
+    private final PasswordEncoder passwordEncoder;
+
 
     @Getter
     @Setter
@@ -38,7 +44,7 @@ public class MemberRequestDto {
 
     @Getter
     @Setter
-    public static class Login {
+    public class Login {
 
         @Pattern(regexp="[가-힣|a-z|A-Z|0-9]{3,30}",message="3~30길이의 알파벳, 한글, 숫자로 입력해주세요")
         @NotBlank(message="userId을 입력해주세요.")
@@ -51,7 +57,8 @@ public class MemberRequestDto {
         private String password;
 
         public UsernamePasswordAuthenticationToken toAuthentication() {
-            return new UsernamePasswordAuthenticationToken(userId, password);
+            String encrypted_password = passwordEncoder.encode(password);
+            return new UsernamePasswordAuthenticationToken(userId, encrypted_password);
         }
 
     }
