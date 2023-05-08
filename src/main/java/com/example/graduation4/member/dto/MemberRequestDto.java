@@ -44,7 +44,7 @@ public class MemberRequestDto {
 
     @Getter
     @Setter
-    public class Login {
+    public static class Login {
 
         @Pattern(regexp="[가-힣|a-z|A-Z|0-9]{3,30}",message="3~30길이의 알파벳, 한글, 숫자로 입력해주세요")
         @NotBlank(message="userId을 입력해주세요.")
@@ -57,8 +57,8 @@ public class MemberRequestDto {
         private String password;
 
         public UsernamePasswordAuthenticationToken toAuthentication() {
-            String encrypted_password = passwordEncoder.encode(password);
-            return new UsernamePasswordAuthenticationToken(userId, encrypted_password);
+            // String encrypted_password = passwordEncoder.encode(password);
+            return new UsernamePasswordAuthenticationToken(userId, password);
         }
 
     }
