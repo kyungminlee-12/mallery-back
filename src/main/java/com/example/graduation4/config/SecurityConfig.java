@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -71,25 +73,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 //h2 콘솔 사용
-                .csrf().disable().headers().frameOptions().disable()
-                .and()
-
-                //세션 사용 안함
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+                // .csrf().disable().headers().frameOptions().disable()
+                // .and()
 
                 //URL 관리
                 .authorizeRequests()
-                .antMatchers("/member/login", "/swagger-ui/**", "/member/signup", "/member/idCheck", "/member/reissue").permitAll()
+                .antMatchers(HttpMethod.POST, "/member/login").permitAll()
+                .antMatchers("/swagger-ui/**", "/member/signup", "/member/idCheck", "/member/reissue").permitAll()
                 .anyRequest().authenticated()
+                .and()
+                .cors()
+                .and()
+                // .exceptionHandling()
+                // .authenticationEntryPoint((AuthenticationEntryPoint) this)
+                // .and()
+                //세션 사용 안함
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .csrf()
+                .disable();
 
                 // .antMatchers("/member/logout", "/member/{userId}").hasRole("USER")
                 // .antMatchers("/member/admin", "/member/{userId}").hasRole("ROLE_ADMIN")
                 //.invalidateHttpSession(true);
 
-                .and()
                 // JwtAuthenticationFilter를 먼저 적용
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .httpBasic();
 
         // http.formLogin()
