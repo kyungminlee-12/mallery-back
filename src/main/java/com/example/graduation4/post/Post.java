@@ -1,6 +1,7 @@
 package com.example.graduation4.post;
 
 import com.example.graduation4.BaseEntity;
+import com.example.graduation4.config.StringListConverter;
 import com.example.graduation4.group.Album;
 import lombok.*;
 
@@ -33,6 +34,9 @@ public class Post extends BaseEntity  {
     @Column
     private String postDate;
 
+    @Column
+    private String userId;
+
     @ManyToOne
     @JoinColumn(name = "album_id")
     private Album album;
@@ -41,14 +45,8 @@ public class Post extends BaseEntity  {
     private List<Participant> participants = new ArrayList<>();
 
     // 이미지 경로
-    @Column
+    @Convert(converter = StringListConverter.class)
+    @Column(name="paths")
     private List<String> imagePaths = new ArrayList<>();
-
-
-    // @Column
-    // private int memberCnt;
-
-    // @OneToMany(mappedBy = "album")
-    // private List<Room> rooms = new ArrayList<>();
 
 }

@@ -14,6 +14,7 @@ public class PostRequestDto {
 
         private String postLocation;
         private String postDate;
+        private String userId;
         private List<String> participants;
         private List<String> imagePaths;
     }

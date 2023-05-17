@@ -33,6 +33,7 @@ public class PostRepository {
 
         Post new_post = new Post();
         new_post.setPostDate(post1.getPostDate());
+        new_post.setUserId(post1.getUserId());
         new_post.setPostLocation(post1.getPostLocation());
         new_post.setAlbum(cur_album);
         new_post.setImagePaths(post1.getImagePaths());
