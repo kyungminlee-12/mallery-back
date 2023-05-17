@@ -29,8 +29,10 @@ public class PostResponseDto {
         private String result;
         private String postDate;
         private String postLocation;
+        private String userId;
         private int memberCnt;
         private List<MemberRes> members;
+        private List<String> imagePaths;
     }
 
     public ResponseEntity<?> postSuccess(Post post1) {
@@ -42,7 +44,9 @@ public class PostResponseDto {
                 .result("성공: Post 정보")
                 .postDate(post1.getPostDate())
                 .postLocation(post1.getPostLocation())
+                .userId(members_list.get(0).getUserId())
                 .memberCnt(members_list.size())
+                .imagePaths(post1.getImagePaths())
                 .members(members_list)
                 .build();
 
