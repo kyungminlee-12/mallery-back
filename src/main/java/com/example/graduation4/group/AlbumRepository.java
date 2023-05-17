@@ -47,6 +47,7 @@ public class AlbumRepository {
         Room room=new Room();
         room.addMember(init_member);
         room.addGroup(album);
+        room.setAlbum_user_name(init_member.getUsername());
         em.persist(room);
         System.out.println("album repository room username: "+room.getMember().getUsername());
 
@@ -64,7 +65,7 @@ public class AlbumRepository {
         for (Room rooms : rooms_list) {
             MemberRes cur_member = new MemberRes();
             cur_member.setUserId(rooms.getMember().getUserId());
-            cur_member.setUsername(rooms.getMember().getUsername());
+            cur_member.setUsername(rooms.getAlbum_user_name());
 
             results.add(cur_member);
         }
@@ -90,6 +91,7 @@ public class AlbumRepository {
         Room room=new Room();
         room.addMember(init_member);
         room.addGroup(cur_album);
+        room.setAlbum_user_name(init_member.getUsername());
         em.persist(room);
 
         cur_album.setMemberCnt(cur_album.getMemberCnt()+1);
@@ -203,6 +205,30 @@ public class AlbumRepository {
         }
 
         return results;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Album changeMemberName(AlbumRequestDto.UpdateUsername user_info) {
+
+        Member cur_member = memberRepository.findMemberByUserId(user_info.getUserId());
+        String findRoomQuery = "SELECT room_id FROM mallery.rooms where album_id = ? and member_id = ?";
+        Long room_id = this.jdbcTemplate.queryForObject(findRoomQuery, Long.class , user_info.getAlbumId() , cur_member.getMemberId());
+        Room changed_room = em.find(Room.class, room_id);
+        System.out.println("changed room id: "+room_id);
+
+        Album album = em.find(Album.class, user_info.getAlbumId());
+        int room_idx = album.getRooms().indexOf(changed_room);
+        System.out.println("changed room index of: "+room_idx);
+
+        this.jdbcTemplate.update("update rooms set album_user_name = ? where album_id = ? and member_id = ? ", user_info.getUsername() , user_info.getAlbumId() , cur_member.getMemberId());
+
+        if(room_idx != -1) {
+            album.getRooms().get(room_idx).setAlbum_user_name(user_info.getUsername());
+        }
+        System.out.println("changed nickname: "+album.getRooms().get(room_idx).getAlbum_user_name());
+
+        em.merge(album);
+        return album;
     }
 
 
