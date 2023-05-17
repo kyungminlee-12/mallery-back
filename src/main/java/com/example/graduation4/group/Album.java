@@ -28,10 +28,10 @@ public class Album extends BaseEntity {
     @Column
     private int memberCnt;
 
-    @OneToMany(mappedBy = "album")
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL,  targetEntity = Room.class , fetch = FetchType.EAGER)
     private List<Room> rooms = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "album_id")
     private List<Post> posts = new ArrayList<>();
 

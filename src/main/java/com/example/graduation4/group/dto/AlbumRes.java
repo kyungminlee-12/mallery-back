@@ -16,4 +16,5 @@ public class AlbumRes {
     private String albumName;
     private int memberCnt;
     private List<String> members;
+    private List<String> nicknames;
 }

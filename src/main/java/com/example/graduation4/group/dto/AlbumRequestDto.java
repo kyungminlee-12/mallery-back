@@ -49,5 +49,11 @@ public class AlbumRequestDto {
         private String userId;
     }
 
-
+    @Getter
+    @Setter
+    public static class UpdateUsername {
+        private Long albumId;
+        private String userId;
+        private String username;
+    }
 }

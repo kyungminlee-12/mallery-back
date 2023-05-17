@@ -133,4 +133,10 @@ public class AlbumService {
         return albumResponseDto.getAlbums(userId, res_list);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<?> changeMemberName(AlbumRequestDto.UpdateUsername user_info) {
+        Album album_res = albumRepository.changeMemberName(user_info);
+        return albumResponseDto.albumSuccess(album_res);
+    }
+
 }
