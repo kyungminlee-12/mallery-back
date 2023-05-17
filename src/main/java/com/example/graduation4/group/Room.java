@@ -25,6 +25,9 @@ public class Room {
     @JoinColumn(name = "album_id")
     private Album album;
 
+    @Column
+    private String album_user_name;
+
     public void addMember(Member member){
         if(member.getRooms().contains(this)){
             member.getRooms().remove(this);

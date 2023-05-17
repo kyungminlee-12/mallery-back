@@ -61,6 +61,11 @@ public class AlbumController {
         return albumService.getAlbums(userId);
     }
 
-
+    @PutMapping("/member/nickname")
+    @ApiOperation(value = "사용자 nickname 변경")
+    // @ApiOperation(value = "회원가입", response = Join.class)
+    public ResponseEntity<?> changeMemberName(@RequestBody AlbumRequestDto.UpdateUsername user_info ) throws ResponseException {
+        return albumService.changeMemberName(user_info);
+    }
 
 }
