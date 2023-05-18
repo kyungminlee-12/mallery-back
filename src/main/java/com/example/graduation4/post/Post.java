@@ -41,10 +41,12 @@ public class Post extends BaseEntity  {
     @JoinColumn(name = "album_id")
     private Album album;
 
+    @Builder.Default
     @OneToMany(mappedBy = "post")
     private List<Participant> participants = new ArrayList<>();
 
     // 이미지 경로
+    @Builder.Default
     @Convert(converter = StringListConverter.class)
     @Column(name="paths")
     private List<String> imagePaths = new ArrayList<>();

@@ -1,6 +1,7 @@
 package com.example.graduation4.group;
 
 import com.example.graduation4.group.dto.AlbumRequestDto;
+import com.example.graduation4.group.dto.AlbumRes;
 import com.example.graduation4.member.Member;
 import com.example.graduation4.member.MemberRepository;
 import com.example.graduation4.member.dto.MemberRes;
@@ -46,6 +47,7 @@ public class AlbumRepository {
         Room room=new Room();
         room.addMember(init_member);
         room.addGroup(album);
+        room.setAlbum_user_name(init_member.getUsername());
         em.persist(room);
         System.out.println("album repository room username: "+room.getMember().getUsername());
 
@@ -63,7 +65,7 @@ public class AlbumRepository {
         for (Room rooms : rooms_list) {
             MemberRes cur_member = new MemberRes();
             cur_member.setUserId(rooms.getMember().getUserId());
-            cur_member.setUsername(rooms.getMember().getUsername());
+            cur_member.setUsername(rooms.getAlbum_user_name());
 
             results.add(cur_member);
         }
@@ -89,6 +91,7 @@ public class AlbumRepository {
         Room room=new Room();
         room.addMember(init_member);
         room.addGroup(cur_album);
+        room.setAlbum_user_name(init_member.getUsername());
         em.persist(room);
 
         cur_album.setMemberCnt(cur_album.getMemberCnt()+1);
@@ -176,4 +179,57 @@ public class AlbumRepository {
         }
         
     }
+
+    // 사용자 친구들 정보 불러오기
+    @Transactional(readOnly = true)
+    public List<AlbumRes> getAlbums(String userId) {
+        Member cur_member=memberRepository.findMemberByUserId(userId);
+
+        List<Room> rooms_list = cur_member.getRooms();
+        List<AlbumRes> results = new ArrayList<AlbumRes>();
+
+        for (Room rooms : rooms_list) {
+            AlbumRes cur_album = new AlbumRes();
+            cur_album.setAlbumId(rooms.getAlbum().getAlbumId());
+            cur_album.setAlbumName(rooms.getAlbum().getAlbumName());
+            cur_album.setMemberCnt(rooms.getAlbum().getMemberCnt());
+
+            List<String> members_list = new ArrayList<>();
+            List<MemberRes> members_entity = findAllMembersByAlbumId(rooms.getAlbum().getAlbumId());
+
+            for (MemberRes member: members_entity) {
+                members_list.add(member.getUserId());
+            }
+            cur_album.setMembers(members_list);
+            results.add(cur_album);
+        }
+
+        return results;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Album changeMemberName(AlbumRequestDto.UpdateUsername user_info) {
+
+        Member cur_member = memberRepository.findMemberByUserId(user_info.getUserId());
+        String findRoomQuery = "SELECT room_id FROM mallery.rooms where album_id = ? and member_id = ?";
+        Long room_id = this.jdbcTemplate.queryForObject(findRoomQuery, Long.class , user_info.getAlbumId() , cur_member.getMemberId());
+        Room changed_room = em.find(Room.class, room_id);
+        System.out.println("changed room id: "+room_id);
+
+        Album album = em.find(Album.class, user_info.getAlbumId());
+        int room_idx = album.getRooms().indexOf(changed_room);
+        System.out.println("changed room index of: "+room_idx);
+
+        this.jdbcTemplate.update("update rooms set album_user_name = ? where album_id = ? and member_id = ? ", user_info.getUsername() , user_info.getAlbumId() , cur_member.getMemberId());
+
+        if(room_idx != -1) {
+            album.getRooms().get(room_idx).setAlbum_user_name(user_info.getUsername());
+        }
+        System.out.println("changed nickname: "+album.getRooms().get(room_idx).getAlbum_user_name());
+
+        em.merge(album);
+        return album;
+    }
+
+
 }

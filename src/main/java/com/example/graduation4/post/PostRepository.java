@@ -27,11 +27,11 @@ import static com.example.graduation4.resTemplate.ResponseTemplateStatus.ALBUM_N
 @RequiredArgsConstructor
 public class PostRepository {
 
-
     @Autowired
     private final MemberRepository memberRepository;
     @Autowired
     private final EntityManager em;
+
 
     @Transactional(rollbackFor = Exception.class)
     public Post createPost(PostRequestDto.Register post1) {

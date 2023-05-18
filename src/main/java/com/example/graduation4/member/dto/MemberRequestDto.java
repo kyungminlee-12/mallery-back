@@ -2,14 +2,20 @@ package com.example.graduation4.member.dto;
 
 import com.sun.istack.NotNull;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
+@RequiredArgsConstructor
 public class MemberRequestDto {
+
+    private final PasswordEncoder passwordEncoder;
+
 
     @Getter
     @Setter
@@ -51,6 +57,7 @@ public class MemberRequestDto {
         private String password;
 
         public UsernamePasswordAuthenticationToken toAuthentication() {
+            // String encrypted_password = passwordEncoder.encode(password);
             return new UsernamePasswordAuthenticationToken(userId, password);
         }
 
