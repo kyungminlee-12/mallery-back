@@ -28,6 +28,7 @@ public enum ResponseTemplateStatus {
     SIGNUP_SUCCESS(true, "해당 아이디 사용이 가능합니다", 200),
 
     ALBUM_NOT_FOUND(false, "앨범을 찾을 수 없습니다.", 200),
+    POST_NOT_FOUND(false, "게시물을 찾을 수 없습니다.", 200),
 
     UPDATE_USER_SUCCESS(true, "전화번호 수정 성공했습니다.", 200);
 

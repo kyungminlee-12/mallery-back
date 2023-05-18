@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -20,6 +22,8 @@ public class PostResponseDto {
 
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private EntityManager em;
 
 
     @Getter
@@ -27,27 +31,64 @@ public class PostResponseDto {
     private static class PostBody {
         private int state;
         private String result;
+        private Long postId;
         private String postDate;
         private String postLocation;
         private String userId;
         private int memberCnt;
-        private List<MemberRes> members;
+        private List<String> members;
+        private List<String> nicknames;
         private List<String> imagePaths;
+    }
+
+    @Getter
+    @Builder
+    private static class PostListBody {
+        private int state;
+        private String result;
+        private Long albumId;
+        private String albumName;
+        private int memberCnt;
+        // private String userId;
+        private List<PostRes> posts;
     }
 
     public ResponseEntity<?> postSuccess(Post post1) {
 
         List<MemberRes> members_list = postRepository.findAllMembersByPostId(post1.getPostId());
+        List<String> members_li = new ArrayList<>();
+        List<String> nicknames_li = new ArrayList<>();
 
+        for (int i=0 ; i < members_list.size() ; i++) {
+            members_li.add(members_list.get(i).getUserId());
+            nicknames_li.add(members_list.get(i).getUsername());
+        }
         PostBody body = PostBody.builder()
                 .state(200)
                 .result("성공: Post 정보")
+                .postId(post1.getPostId())
                 .postDate(post1.getPostDate())
                 .postLocation(post1.getPostLocation())
                 .userId(members_list.get(0).getUserId())
                 .memberCnt(members_list.size())
                 .imagePaths(post1.getImagePaths())
-                .members(members_list)
+                .members(members_li)
+                .nicknames(nicknames_li)
+                .build();
+
+        return ResponseEntity.ok(body);
+    }
+
+    public ResponseEntity<?> postList(Long albumId, List<PostRes> postli) {
+
+        Album cur_album = em.find(Album.class, albumId);
+        PostListBody body = PostListBody.builder()
+                .state(200)
+                .result("성공: Post 정보")
+                .albumId(albumId)
+                .albumName(cur_album.getAlbumName())
+                .memberCnt(cur_album.getMemberCnt())
+                .posts(postli)
                 .build();
 
         return ResponseEntity.ok(body);
