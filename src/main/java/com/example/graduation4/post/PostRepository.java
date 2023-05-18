@@ -9,6 +9,7 @@ import com.example.graduation4.member.dto.MemberRes;
 import com.example.graduation4.post.dto.PostRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,10 @@ public class PostRepository {
 
     @Autowired
     private final MemberRepository memberRepository;
+
+    @Autowired
+    private final JdbcTemplate jdbcTemplate ;
+
     @Autowired
     private final EntityManager em;
 
@@ -69,8 +74,13 @@ public class PostRepository {
         for (Participant participant : participants_list) {
             MemberRes cur_member = new MemberRes();
             cur_member.setUserId(participant.getMember().getUserId());
-            cur_member.setUsername(participant.getMember().getUsername());
 
+            String findRoomQuery = "SELECT room_id FROM mallery.rooms where album_id = ? and member_id = ?";
+            Long room_id = this.jdbcTemplate.queryForObject(findRoomQuery, Long.class , cur_post.getAlbum() , participant.getMember().getMemberId());
+            Room cur_room = em.find(Room.class, room_id);
+
+            cur_member.setUsername(cur_room.getAlbum_user_name());
+            // cur_member.setUsername(participant.getMember().getUsername());
             results.add(cur_member);
         }
 
