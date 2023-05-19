@@ -7,15 +7,22 @@ import com.example.graduation4.member.Member;
 import com.example.graduation4.member.MemberRepository;
 import com.example.graduation4.member.dto.MemberRes;
 import com.example.graduation4.post.dto.PostRequestDto;
+import com.example.graduation4.post.dto.PostRes;
+import com.example.graduation4.post.dto.PostResponseDto;
+import com.example.graduation4.resTemplate.ResponseTemplate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.jdbc.core.JdbcTemplate;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.graduation4.resTemplate.ResponseTemplateStatus.ALBUM_NOT_FOUND;
 
 @Repository
 @RequiredArgsConstructor
@@ -59,6 +66,7 @@ public class PostRepository {
         new_post.setParticipants(participants_list);
 
         em.persist(new_post);
+        cur_album.getPosts().add(new_post);
 
         return new_post;
     }
@@ -76,7 +84,10 @@ public class PostRepository {
             cur_member.setUserId(participant.getMember().getUserId());
 
             String findRoomQuery = "SELECT room_id FROM mallery.rooms where album_id = ? and member_id = ?";
-            Long room_id = this.jdbcTemplate.queryForObject(findRoomQuery, Long.class , cur_post.getAlbum() , participant.getMember().getMemberId());
+            System.out.println("album id: "+cur_post.getAlbum().getAlbumId());
+            System.out.println("member id: "+ participant.getMember().getMemberId());
+            Long room_id = this.jdbcTemplate.queryForObject(findRoomQuery, Long.class , cur_post.getAlbum().getAlbumId() , participant.getMember().getMemberId());
+            System.out.println("room id: "+room_id);
             Room cur_room = em.find(Room.class, room_id);
 
             cur_member.setUsername(cur_room.getAlbum_user_name());
@@ -85,6 +96,28 @@ public class PostRepository {
         }
 
         return results;
+    }
+
+    public Post findPostById(Long postId) {
+        return em.find(Post.class, postId);
+    }
+
+    public List<PostRes> getPosts(Long albumId) {
+        Album cur_album = em.find(Album.class, albumId);
+        System.out.println("album id: "+albumId+", album name: "+cur_album.getAlbumName());
+        List<PostRes> res_li = new ArrayList<>();
+
+        List<Post> post_li = cur_album.getPosts();
+        System.out.println("post_li size: "+post_li.size());
+        for (int idx=0 ; idx<post_li.size(); idx++) {
+            Post cur_post = post_li.get(idx);
+            PostRes new_res = new PostRes();
+            new_res.setPostId(cur_post.getPostId());
+            new_res.setPostDate(cur_post.getPostDate());
+            new_res.setMainImage(cur_post.getImagePaths().get(0));
+            res_li.add(new_res);
+        }
+        return res_li;
     }
 
 }
