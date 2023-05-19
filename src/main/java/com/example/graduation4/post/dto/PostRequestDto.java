@@ -18,4 +18,15 @@ public class PostRequestDto {
         private List<String> participants;
         private List<String> imagePaths;
     }
+
+    @Getter
+    @Setter
+    public static class Update {
+
+        private String postLocation;
+        private String postDate;
+        private String userId;
+        private List<String> participants;
+        private List<String> imagePaths;
+    }
 }

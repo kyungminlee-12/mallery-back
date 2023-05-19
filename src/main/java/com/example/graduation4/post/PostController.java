@@ -42,4 +42,18 @@ public class PostController {
     public ResponseEntity<?> getPosts(@PathVariable("groupId") Long groupId ) throws ResponseException {
         return postService.findPostsByGroupId(groupId);
     }
+
+    @PutMapping("/{groupId}/{postId}")
+    @ApiOperation(value = "post 정보 수정")
+    // @ApiOperation(value = "회원가입", response = Join.class)
+    public ResponseEntity<?> updatePost(@PathVariable("postId") Long postId, @RequestBody PostRequestDto.Update update_post ) throws ResponseException {
+        return postService.updatePost(postId, update_post);
+    }
+
+    @DeleteMapping("/{groupId}/{postId}")
+    @ApiOperation(value = "post 삭제")
+    // @ApiOperation(value = "회원가입", response = Join.class)
+    public ResponseEntity<?> deletePosts(@PathVariable("postId") Long postId ) throws ResponseException {
+        return postService.deletePost(postId);
+    }
 }
