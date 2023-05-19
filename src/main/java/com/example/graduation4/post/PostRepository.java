@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,8 @@ public class PostRepository {
     @Autowired
     private final MemberRepository memberRepository;
     @Autowired
+    private final JdbcTemplate jdbcTemplate ;
+    @Autowired
     private final EntityManager em;
 
 
@@ -44,6 +47,7 @@ public class PostRepository {
         new_post.setPostLocation(post1.getPostLocation());
         new_post.setAlbum(cur_album);
         new_post.setImagePaths(post1.getImagePaths());
+        new_post.setUpdated(false);
 
         List<String> participants_ids = post1.getParticipants();
         List<Participant> participants_list = new ArrayList<>();
@@ -106,5 +110,55 @@ public class PostRepository {
         }
         return res_li;
     }
+
+    public int checkPostId(Long postId) {
+        try {
+            // 쿼리문의 결과(존재하지 않음(False,0),존재함(True, 1))를 int형(0,1)으로 반환됩니다.
+            String checkUserIdQuery = "select exists(select * from mallery.post where post_id = ?)";
+            return this.jdbcTemplate.queryForObject(checkUserIdQuery, Integer.class, postId);
+
+        } catch (Exception e){
+            return 0;
+        }
+    }
+
+    public void deletePost(Long postId) {
+        Post cur_post = em.find(Post.class, postId);
+    }
+
+    public Post updatePost(Long postId, PostRequestDto.Update update_post ) {
+        Post cur_post = em.find(Post.class, postId);
+        cur_post.setPostLocation(update_post.getPostLocation());
+        cur_post.setPostDate(update_post.getPostDate());
+        cur_post.setUserId(update_post.getUserId());
+
+        List<String> participants_ids = update_post.getParticipants();
+        List<Participant> participants_list = new ArrayList<>();
+
+        for (int cnt=0; cnt < participants_ids.size(); cnt++) {
+            System.out.println("cur participant: "+participants_ids.get(cnt));
+            Member new_member = memberRepository.findMemberByUserId(participants_ids.get(cnt));
+
+            Participant cur_participant = new Participant();
+            cur_participant.setPost(cur_post);
+            cur_participant.setMember(new_member);
+            participants_list.add(cur_participant);
+            em.persist(cur_participant);
+        }
+
+        cur_post.setParticipants(participants_list);
+        cur_post.setImagePaths(update_post.getImagePaths());
+        cur_post.setUpdated(true);
+        em.persist(cur_post);
+
+        return cur_post;
+    }
+
+    /*
+    public boolean isUpdatable (String userId) {
+
+    }
+
+     */
 
 }

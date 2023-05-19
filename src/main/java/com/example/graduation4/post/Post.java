@@ -4,6 +4,9 @@ import com.example.graduation4.BaseEntity;
 import com.example.graduation4.config.StringListConverter;
 import com.example.graduation4.group.Album;
 import lombok.*;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -12,6 +15,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Audited(targetAuditMode = RelationTargetAuditMode.AUDITED) // 데이터 변경 이력 감지
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -39,10 +43,15 @@ public class Post extends BaseEntity  {
 
     @ManyToOne
     @JoinColumn(name = "album_id")
+    @NotAudited
     private Album album;
+
+    @Column
+    private boolean isUpdated;
 
     @Builder.Default
     @OneToMany(mappedBy = "post")
+    @NotAudited
     private List<Participant> participants = new ArrayList<>();
 
     // 이미지 경로

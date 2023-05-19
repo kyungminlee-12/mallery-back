@@ -37,6 +37,7 @@ public class PostResponseDto {
         private String postLocation;
         private String userId;
         private int memberCnt;
+        private boolean updated;
         private List<String> members;
         private List<String> nicknames;
         private List<String> imagePaths;
@@ -52,6 +53,14 @@ public class PostResponseDto {
         private int memberCnt;
         // private String userId;
         private List<PostRes> posts;
+    }
+
+    @Getter
+    @Builder
+    private static class Delete {
+        private String result;
+        private Long commentId;
+        private String message;
     }
 
     public ResponseEntity<?> postSuccess(Post post1) {
@@ -72,6 +81,7 @@ public class PostResponseDto {
                 .postLocation(post1.getPostLocation())
                 .userId(members_list.get(0).getUserId())
                 .memberCnt(members_list.size())
+                .updated(post1.isUpdated())
                 .imagePaths(post1.getImagePaths())
                 .members(members_li)
                 .nicknames(nicknames_li)
@@ -94,4 +104,16 @@ public class PostResponseDto {
 
         return ResponseEntity.ok(body);
     }
+
+    public ResponseEntity<?> deletePost(Long postId) {
+
+        Delete body = Delete.builder()
+                .result("success")
+                .commentId(postId)
+                .message("게시물 삭제 성공")
+                .build();
+        return ResponseEntity.ok(body);
+    }
+
+
 }

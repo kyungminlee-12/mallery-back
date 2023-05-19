@@ -54,6 +54,9 @@ dependencies {
 
 	// 이미지 다루기
 	// implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.1'
+
+	// 히스토리 관리
+	implementation 'org.springframework.data:spring-data-envers'
 }
 
 tasks.named('test') {

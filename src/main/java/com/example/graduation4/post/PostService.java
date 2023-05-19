@@ -38,7 +38,7 @@ public class PostService {
 
         if (albumRepository.checkAlbumId(post1.getAlbumId())!= 1) {
             System.out.println("album id: "+post1.getAlbumId());
-            return response.fail("해당하는 앨범이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseTemplate<>(ALBUM_NOT_FOUND));
         }
 
         Post new_album = postRepository.createPost(post1);
@@ -61,4 +61,27 @@ public class PostService {
         List<PostRes> res_list = postRepository.getPosts(groupId);
         return postResponseDto.postList(groupId, res_list);
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<?> updatePost(Long postId, PostRequestDto.Update update_post ) {
+        if (postRepository.checkPostId(postId)!=1) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseTemplate<>(POST_NOT_FOUND));
+        }
+
+        Post updated_post = postRepository.updatePost( postId, update_post);
+        return postResponseDto.postSuccess(updated_post);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<?> deletePost(Long postId) {
+        if (postRepository.checkPostId(postId)!=1) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseTemplate<>(POST_NOT_FOUND));
+        }
+        postRepository.deletePost(postId);
+        return postResponseDto.deletePost(postId);
+    }
+
+
+
+
 }
