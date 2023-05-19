@@ -22,7 +22,7 @@ public class PostController {
     @Autowired
     private final PostService postService;
 
-    @PostMapping("/{groupId}/new")
+    @PostMapping("/new")
     @ApiOperation(value = "post 생성")
     // @ApiOperation(value = "회원가입", response = Join.class)
     public ResponseEntity<?> newPost(@RequestBody PostRequestDto.Register new_post ) throws ResponseException {

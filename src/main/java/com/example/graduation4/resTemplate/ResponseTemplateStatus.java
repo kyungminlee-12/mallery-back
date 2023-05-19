@@ -27,8 +27,9 @@ public enum ResponseTemplateStatus {
     FRIEND_DUPLICATED(false, "이미 존재하는 친구 아이디입니다.", 4012),
     SIGNUP_SUCCESS(true, "해당 아이디 사용이 가능합니다", 200),
 
-    ALBUM_NOT_FOUND(false, "앨범을 찾을 수 없습니다.", 200),
-    POST_NOT_FOUND(false, "게시물을 찾을 수 없습니다.", 200),
+    ALBUM_NOT_FOUND(false, "앨범을 찾을 수 없습니다.", 4013),
+    POST_NOT_FOUND(false, "게시물을 찾을 수 없습니다.", 4014),
+    COMMENT_NOT_FOUNT(false, "댓글을 찾을 수 없습니다", 4015),
 
     UPDATE_USER_SUCCESS(true, "사용자 정보 수정 성공했습니다.", 200);
 
