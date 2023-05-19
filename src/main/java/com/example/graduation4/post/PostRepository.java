@@ -120,4 +120,15 @@ public class PostRepository {
         return res_li;
     }
 
+    public int checkPostId(Long postId) {
+        try {
+            // 쿼리문의 결과(존재하지 않음(False,0),존재함(True, 1))를 int형(0,1)으로 반환됩니다.
+            String checkUserIdQuery = "select exists(select * from mallery.post where post_id = ?)";
+            return this.jdbcTemplate.queryForObject(checkUserIdQuery, Integer.class, postId);
+
+        } catch (Exception e){
+            return 0;
+        }
+    }
+
 }
