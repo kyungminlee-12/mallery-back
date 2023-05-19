@@ -30,6 +30,7 @@ public enum ResponseTemplateStatus {
     ALBUM_NOT_FOUND(false, "앨범을 찾을 수 없습니다.", 4013),
     POST_NOT_FOUND(false, "게시물을 찾을 수 없습니다.", 4014),
     COMMENT_NOT_FOUNT(false, "댓글을 찾을 수 없습니다", 4015),
+    CANNOT_UPDATE_USER(false, "수정이 불가능한 게시물입니다", 4016 ),
 
     UPDATE_USER_SUCCESS(true, "사용자 정보 수정 성공했습니다.", 200);
 

@@ -63,6 +63,15 @@ public class PostResponseDto {
         private String message;
     }
 
+    @Getter
+    @Builder
+    private static class Update {
+        private boolean isSuccess;
+        private int code;
+        private String message;
+    }
+
+
     public ResponseEntity<?> postSuccess(Post post1) {
 
         List<MemberRes> members_list = postRepository.findAllMembersByPostId(post1.getPostId());
@@ -111,6 +120,16 @@ public class PostResponseDto {
                 .result("success")
                 .commentId(postId)
                 .message("게시물 삭제 성공")
+                .build();
+        return ResponseEntity.ok(body);
+    }
+
+    public ResponseEntity<?> updatePost(String res) {
+
+        Update body = Update.builder()
+                .isSuccess(true)
+                .code(200)
+                .message(res)
                 .build();
         return ResponseEntity.ok(body);
     }
