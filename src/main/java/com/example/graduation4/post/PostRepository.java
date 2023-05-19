@@ -148,6 +148,7 @@ public class PostRepository {
         cur_post.setPostDate(update_post.getPostDate());
         cur_post.setUserId(update_post.getUserId());
 
+        /*
         List<String> participants_ids = update_post.getParticipants();
         List<Participant> participants_list = new ArrayList<>();
 
@@ -163,6 +164,8 @@ public class PostRepository {
         }
 
         cur_post.setParticipants(participants_list);
+
+         */
         cur_post.setImagePaths(update_post.getImagePaths());
         cur_post.setUpdated(true);
         em.persist(cur_post);
