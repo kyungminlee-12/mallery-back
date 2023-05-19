@@ -37,8 +37,6 @@ public class PostRepository {
     private final JdbcTemplate jdbcTemplate ;
 
     @Autowired
-    private final JdbcTemplate jdbcTemplate ;
-    @Autowired
     private final EntityManager em;
 
 
@@ -53,7 +51,8 @@ public class PostRepository {
         new_post.setPostLocation(post1.getPostLocation());
         new_post.setAlbum(cur_album);
         new_post.setImagePaths(post1.getImagePaths());
-        new_post.setUpdated(false);
+        new_post.setDeleted(false);
+        // new_post.set(false);
 
         List<String> participants_ids = post1.getParticipants();
         List<Participant> participants_list = new ArrayList<>();
@@ -116,6 +115,7 @@ public class PostRepository {
         System.out.println("post_li size: "+post_li.size());
         for (int idx=0 ; idx<post_li.size(); idx++) {
             Post cur_post = post_li.get(idx);
+            // if (cur_post.getDeleted() == true) continue;
             PostRes new_res = new PostRes();
             new_res.setPostId(cur_post.getPostId());
             new_res.setPostDate(cur_post.getPostDate());
@@ -138,6 +138,8 @@ public class PostRepository {
 
     public void deletePost(Long postId) {
         Post cur_post = em.find(Post.class, postId);
+        cur_post.setDeleted(true);
+        em.persist(cur_post);
     }
 
     public Post updatePost(Long postId, PostRequestDto.Update update_post ) {

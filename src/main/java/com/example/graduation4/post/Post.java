@@ -4,6 +4,7 @@ import com.example.graduation4.BaseEntity;
 import com.example.graduation4.config.StringListConverter;
 import com.example.graduation4.group.Album;
 import lombok.*;
+import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Where(clause = "is_deleted = false")
 @Audited(targetAuditMode = RelationTargetAuditMode.AUDITED) // 데이터 변경 이력 감지
 @NoArgsConstructor
 @AllArgsConstructor
@@ -48,6 +50,9 @@ public class Post extends BaseEntity  {
 
     @Column
     private boolean isUpdated;
+
+    @Column
+    private boolean isDeleted;
 
     @Builder.Default
     @OneToMany(mappedBy = "post")
