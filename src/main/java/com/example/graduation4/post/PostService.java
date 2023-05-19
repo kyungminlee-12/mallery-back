@@ -19,8 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.example.graduation4.resTemplate.ResponseTemplateStatus.ALBUM_NOT_FOUND;
-import static com.example.graduation4.resTemplate.ResponseTemplateStatus.POST_NOT_FOUND;
+import static com.example.graduation4.resTemplate.ResponseTemplateStatus.*;
 
 @RequiredArgsConstructor
 @Service
@@ -81,7 +80,16 @@ public class PostService {
         return postResponseDto.deletePost(postId);
     }
 
-
-
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<?> isUpdatable(Long postId, String userId) {
+        if (postRepository.checkPostId(postId)!=1) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseTemplate<>(POST_NOT_FOUND));
+        }
+        String res;
+        int is_updatable = postRepository.isUpdatable(postId, userId);
+        if (is_updatable == 1) res = "수정 가능합니다";
+        else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseTemplate<>(CANNOT_UPDATE_USER));
+        return postResponseDto.updatePost(res);
+    }
 
 }

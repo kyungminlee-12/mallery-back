@@ -29,4 +29,10 @@ public class PostRequestDto {
         private List<String> participants;
         private List<String> imagePaths;
     }
+
+    @Getter
+    @Setter
+    public static class Check {
+        private String userId;
+    }
 }

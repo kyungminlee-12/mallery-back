@@ -56,4 +56,11 @@ public class PostController {
     public ResponseEntity<?> deletePosts(@PathVariable("postId") Long postId ) throws ResponseException {
         return postService.deletePost(postId);
     }
+
+    @PostMapping("/{postId}/idCheck")
+    @ApiOperation(value = "post 수정 가능 여부 확인")
+    // @ApiOperation(value = "회원가입", response = Join.class)
+    public ResponseEntity<?> isUpdatable(@PathVariable("postId") Long postId, @RequestBody PostRequestDto.Check check_post ) throws ResponseException {
+        return postService.isUpdatable(postId, check_post.getUserId());
+    }
 }

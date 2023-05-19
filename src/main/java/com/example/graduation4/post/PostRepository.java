@@ -170,12 +170,13 @@ public class PostRepository {
         return cur_post;
     }
 
-    /*
-    public boolean isUpdatable (String userId) {
+
+    public int isUpdatable (Long postId, String userId) {
+        Member cur_mem = memberRepository.findMemberByUserId(userId);
+        String checkQuery = "select exists(select * from mallery.participant where post_id = ? and member_id = ?)";
+        return this.jdbcTemplate.queryForObject(checkQuery, Integer.class, postId, cur_mem.getMemberId());
 
     }
-
-     */
 
 
 }
