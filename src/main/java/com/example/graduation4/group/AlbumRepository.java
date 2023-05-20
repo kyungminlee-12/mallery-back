@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.swing.plaf.synth.SynthEditorPaneUI;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -183,6 +185,43 @@ public class AlbumRepository {
     // 사용자 친구들 정보 불러오기
     @Transactional(readOnly = true)
     public List<AlbumRes> getAlbums(String userId) {
+        Member cur_member=memberRepository.findMemberByUserId(userId);
+
+        List<Room> rooms_list = cur_member.getRooms();
+        List<AlbumRes> results = new ArrayList<AlbumRes>();
+
+        for (Room rooms : rooms_list) {
+            AlbumRes cur_album = new AlbumRes();
+            Long albumId = rooms.getAlbum().getAlbumId();
+            cur_album.setAlbumId(albumId);
+            cur_album.setAlbumName(rooms.getAlbum().getAlbumName());
+            cur_album.setMemberCnt(rooms.getAlbum().getMemberCnt());
+
+            List<String> members_list = new ArrayList<>();
+            List<String> nicknames_list = new ArrayList<>();
+            List<MemberRes> members_entity = findAllMembersByAlbumId(albumId);
+
+            for (MemberRes member: members_entity)
+                members_list.add(member.getUserId());
+            cur_album.setMembers(members_list);
+
+            cur_album.setNicknames(getAlbumNicknames(albumId));
+            results.add(cur_album);
+        }
+
+        return results;
+    }
+
+    public List<String> getAlbumNicknames(Long albumId) {
+        return jdbcTemplate.query("select album_user_name from rooms where album_id = "+albumId, new RowMapper<String>(){
+            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return rs.getString("album_user_name");
+            }
+        });
+    }
+
+    @Transactional(readOnly = true)
+    public List<AlbumRes> getAlbums_before(String userId) {
         Member cur_member=memberRepository.findMemberByUserId(userId);
 
         List<Room> rooms_list = cur_member.getRooms();
